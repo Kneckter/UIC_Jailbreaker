@@ -2,19 +2,20 @@
 An Xcode UI Test that can be used with unc0ver to jailbreak an iPhone without human intervention. 
 
 # Setup
+To start using this project, you will need Xcode from the Apple App Store (I used `12.4`) and cocoapods `sudo gem install cocoapods`. You also need to setup an app development team to use inside Xcode for signing the app.
+
 1. Start by cloning this repo to a Mac: `git clone git@github.com:Kneckter/UIC_Jailbreaker.git`
 2. Change into the folder and install the pods: `cd UIC_Jailbreaker && pod install`
-  - You may need to `sudo gem install cocoapods` if it is not installed
 3. Launch the workspace `UIC_Jailbreaker.xcworkspace` by double clicking on it.
 4. In Xcode, click on the project file in the left view to edit its properties.
 5. In the tab bar, click on `Signing & Capabilities` and select your team from the drop down.
 6. Switch from `UIC_Jailbreaker` (first button on the tab bar) to `UIC_JailbreakerUITests` and also pick your team there.
 7. Select `Product` from the menu and click on the `Build` option. It should successfully build.
 8. Select `Product` from the menu, hover over `Build For`, and click on the `Testing` option. It should successfully build.
-9. If both built successfully, close Xcode and we will run the app from the command line. Otherwise, troubleshoot the errors.
+9. If both built successfully, close Xcode and we will run the app from the command line. Otherwise, troubleshoot the errors or run the tests from inside Xcode.
 
 # Usage
-Once the repo is setup, you can build and run this from any folder by using commands or scripts. For this setup, we will build the project once and create copies of it for each iDevice we run it against. The following command will create a `DerivedData` folder in the working directory that houses the built files.
+Once the setup is complete, you can build and run this from any folder by using commands or scripts. For this setup, we will build the project once and create copies of it for each iDevice we run it against. The following command will create a `DerivedData` folder in the working directory that houses the built files.
 ```
 xcodebuild build-for-testing -workspace ~/UIC_Jailbreaker/UIC_Jailbreaker.xcworkspace -scheme UIC_Jailbreaker -destination generic/platform=iOS -derivedDataPath ./DerivedData/Template
 ```
@@ -34,7 +35,7 @@ Don't have Xcode IDE open after the JB process is initiated. It will cause issue
 
 # Misc.
 **Update Unc0ver?**
-Feel free to try different versions of unc0ver with different iOS versions. Below are my results with one test device. You can use this command to swap through versions quickly and then run the test build: `ios-deploy --id <ID> --uninstall --bundle_id science.xnu.undecimus -b resigned-unc0ver_Release_8.0.1.ipa`. Let me know if you know of another app-based jailbreak.
+Feel free to try different versions of unc0ver with different iOS versions. Below are my results with one test device. You can use this command to swap through versions quickly and then run the test build: `ios-deploy --id <ID> --uninstall --bundle_id science.xnu.undecimus -b resigned-unc0ver_Release_8.0.1.ipa`. Let me know if you know of another app-based jailbreak. Note that UIC_Jailbreaker does work correctly with all the below versions of unc0ver, it's just an issue with unc0ver on this test device.
 ```
 8.0.2 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
 8.0.1 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
