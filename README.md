@@ -37,12 +37,20 @@ Don't have Xcode IDE open after the JB process is initiated. It will cause issue
 **Update Unc0ver?**
 Feel free to try different versions of unc0ver with different iOS versions. Below are my results with one test device. You can use this command to swap through versions quickly and then run the test build: `ios-deploy --id <ID> --uninstall --bundle_id science.xnu.undecimus -b resigned-unc0ver_Release_8.0.1.ipa`. Let me know if you know of another app-based jailbreak. Note that UIC_Jailbreaker does work correctly with all the below versions of unc0ver, it's just an issue with unc0ver on this test device.
 ```
+8.0.2 unsupported on iPhone SE (Gen1) iOS 14.4
 8.0.2 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+8.0.1 unsupported on iPhone SE (Gen1) iOS 14.4
 8.0.1 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+8.0.0 unsupported on iPhone SE (Gen1) iOS 14.4
 8.0.0 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+7.0.2 unsupported on iPhone SE (Gen1) iOS 14.4
 7.0.2 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+7.0.1 unsupported on iPhone SE (Gen1) iOS 14.4
 7.0.1 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+7.0.0 unsupported on iPhone SE (Gen1) iOS 14.4
 7.0.0 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+6.2.0 unsupported on iPhone SE (Gen1) iOS 14.4
 6.2.0 failed to find offsets multiple times on iPhone SE (Gen1) iOS 14.3
+6.1.2 unsupported on iPhone SE (Gen1) iOS 14.4
 6.1.2 worked multiple times on iPhone SE (Gen1) iOS 14.3
 ```

@@ -137,22 +137,21 @@ class UIC_JailbreakerTests: XCTestCase {
             if let systemAlertMonitorToken = self.systemAlertMonitorToken {
                 removeUIInterruptionMonitor(systemAlertMonitorToken)
                 self.systemAlertMonitorToken = nil
-            } else {
-                systemAlertMonitorToken = addUIInterruptionMonitor(withDescription: "System Dialog") {
-                    (alert) -> Bool in
-                    let okButton = alert.buttons["OK"]
-                    if okButton.exists { okButton.tap() }
-                    
-                    let allowButton = alert.buttons["Allow"]
-                    if allowButton.exists { allowButton.tap() }
-                    
-                    let allowWhileUsingButton = alert.buttons["Allow While Using App"]
-                    if allowWhileUsingButton.exists { allowWhileUsingButton.tap() }
-                    
-                    return true
-                }
-                app.tap()
             }
+            systemAlertMonitorToken = addUIInterruptionMonitor(withDescription: "System Dialog") {
+                (alert) -> Bool in
+                let okButton = alert.buttons["OK"]
+                if okButton.exists { okButton.tap() }
+
+                let allowButton = alert.buttons["Allow"]
+                if allowButton.exists { allowButton.tap() }
+
+                let allowWhileUsingButton = alert.buttons["Allow While Using App"]
+                if allowWhileUsingButton.exists { allowWhileUsingButton.tap() }
+
+                return true
+            }
+            app.tap()
             count += 1
             
             if count >= 5 {
@@ -162,13 +161,36 @@ class UIC_JailbreakerTests: XCTestCase {
         }
         // Color check for jb button
         if checkJailbreakButton() {
+            // Set the app options
+            Log.info("Tapping Settings button.")
+            deviceConfig.settingsButton.toXCUICoordinate(app: app).tap()
+            sleep(2)
+            Log.info("Tapping SSH button.")
+            deviceConfig.sshButton.toXCUICoordinate(app: app).tap()
+            sleep(2)
+            Log.info("Tapping Done button.")
+            deviceConfig.doneButton.toXCUICoordinate(app: app).tap()
+            sleep(2)
+            
             Log.info("Jailbreak button found. Tapping it.")
             deviceConfig.jailbreakButton.toXCUICoordinate(app: app).tap()
             // Sleep until the black ad is displayed. Then close it and tap to OK popup
             var jbDone = false
             count = 0
             while !jbDone {
-                //Check for X
+                // Check for Substrate permissions to send reports
+                if let systemAlertMonitorToken = self.systemAlertMonitorToken {
+                    removeUIInterruptionMonitor(systemAlertMonitorToken)
+                    self.systemAlertMonitorToken = nil
+                }
+                systemAlertMonitorToken = addUIInterruptionMonitor(withDescription: "System Dialog") {
+                    (alert) -> Bool in
+                    let dontAllow = alert.buttons["Don't Allow"]
+                    if dontAllow.exists { dontAllow.tap() }
+                    return true
+                }
+                app.tap()
+                // Check for X
                 if checkCloseSupportButton() {
                     Log.info("Close Support button found. Tapping it.")
                     deviceConfig.closeSupportButton.toXCUICoordinate(app: app).tap()
@@ -179,7 +201,7 @@ class UIC_JailbreakerTests: XCTestCase {
                     sleep(10)
                 }
                 count += 1
-                if count >= 12 {
+                if count >= 18 {
                     jbDone = true
                     lastTestIndex = -2
                 }
@@ -255,6 +277,12 @@ protocol DeviceConfigProtocol {
     var jailbreakButton: DeviceCoordinate { get }
     /** Black pixel in the X button. */
     var closeSupportButton: DeviceCoordinate { get }
+    /** Center of the Settings button. */
+    var settingsButton: DeviceCoordinate { get }
+    /** Center of the white SSH button. */
+    var sshButton: DeviceCoordinate { get }
+    /** D of the Done button. */
+    var doneButton: DeviceCoordinate { get }
 
 }
 
@@ -313,6 +341,15 @@ class DeviceRatio1775: DeviceConfigProtocol {
     var closeSupportButton: DeviceCoordinate {
         return DeviceCoordinate(x: 60, y: 150, scaler: scaler)
     }
+    var settingsButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 80, y: 90, scaler: scaler)
+    }
+    var sshButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 530, y: 950, scaler: scaler)
+    }
+    var doneButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 512, y: 84, scaler: scaler)
+    }
 
 }
 
@@ -324,6 +361,15 @@ class DeviceIPhoneNormal: DeviceRatio1775 {
     override var closeSupportButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
     }
+    override var settingsButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
+    override var sshButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
+    override var doneButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
 
 }
 
@@ -333,6 +379,15 @@ class DeviceIPhonePlus: DeviceRatio1775 {
         return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
     }
     override var closeSupportButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
+    override var settingsButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
+    override var sshButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
+    override var doneButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
     }
 
@@ -350,6 +405,15 @@ class DeviceRatio1333: DeviceConfigProtocol {
         return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
     }
     var closeSupportButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
+    }
+    var settingsButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
+    }
+    var sshButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
+    }
+    var doneButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
     }
 }
