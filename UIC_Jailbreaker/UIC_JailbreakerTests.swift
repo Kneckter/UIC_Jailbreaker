@@ -185,8 +185,13 @@ class UIC_JailbreakerTests: XCTestCase {
                 }
                 systemAlertMonitorToken = addUIInterruptionMonitor(withDescription: "System Dialog") {
                     (alert) -> Bool in
+
                     let dontAllow = alert.buttons["Don't Allow"]
                     if dontAllow.exists { dontAllow.tap() }
+
+                    let neverAllow = alert.buttons["Never Allow"]
+                    if neverAllow.exists { neverAllow.tap() }
+
                     return true
                 }
                 app.tap()
