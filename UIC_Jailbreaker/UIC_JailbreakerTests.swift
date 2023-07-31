@@ -55,6 +55,19 @@ class UIC_JailbreakerTests: XCTestCase {
         }
     }
 
+    func checksshButton() -> Bool {
+        Log.info("Checking if SSH install is already enabled")
+        let screenshotComp = XCUIScreen.main.screenshot()
+        if screenshotComp.rgbAtLocation(
+                pos: deviceConfig.closeSupportButton,
+                min: (red: 0.00, green: 0.45, blue: 0.98),
+                max: (red: 0.02, green: 0.49, blue: 1.00)){
+            return true
+        } else {
+            return false
+        }
+    }
+
     func part0Setup() {
 
         print("[STATUS] Starting")
@@ -165,9 +178,14 @@ class UIC_JailbreakerTests: XCTestCase {
             Log.info("Tapping Settings button.")
             deviceConfig.settingsButton.toXCUICoordinate(app: app).tap()
             sleep(2)
-            Log.info("Tapping SSH button.")
-            deviceConfig.sshButton.toXCUICoordinate(app: app).tap()
-            sleep(2)
+            if checksshButton() {
+                Log.info("Install SSH is already enabled.")
+            }
+            else {
+                Log.info("Tapping SSH button.")
+                deviceConfig.sshButton.toXCUICoordinate(app: app).tap()
+                sleep(2)
+            }
             Log.info("Tapping Done button.")
             deviceConfig.doneButton.toXCUICoordinate(app: app).tap()
             sleep(2)
