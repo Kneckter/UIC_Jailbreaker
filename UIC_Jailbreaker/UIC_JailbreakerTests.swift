@@ -56,12 +56,25 @@ class UIC_JailbreakerTests: XCTestCase {
     }
 
     func checksshButton() -> Bool {
-        Log.info("Checking if SSH install is already enabled")
+        Log.info("Checking for the SSH install button")
         let screenshotComp = XCUIScreen.main.screenshot()
         if screenshotComp.rgbAtLocation(
-                pos: deviceConfig.closeSupportButton,
+                pos: deviceConfig.sshButton,
                 min: (red: 0.00, green: 0.45, blue: 0.98),
                 max: (red: 0.02, green: 0.49, blue: 1.00)){
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func checkDarkButton() -> Bool {
+        Log.info("Checking for the Dark Mode button")
+        let screenshotComp = XCUIScreen.main.screenshot()
+        if screenshotComp.rgbAtLocation(
+                pos: deviceConfig.darkButton,
+                min: (red: 0.95, green: 0.95, blue: 0.95),
+                max: (red: 1.00, green: 1.00, blue: 1.00)){
             return true
         } else {
             return false
@@ -174,25 +187,35 @@ class UIC_JailbreakerTests: XCTestCase {
         }
         // Color check for jb button
         if checkJailbreakButton() {
+            Log.info("Jailbreak button found. Confirmed unc0ver startup.")
             // Set the app options
             Log.info("Tapping Settings button.")
             deviceConfig.settingsButton.toXCUICoordinate(app: app).tap()
             sleep(2)
-            if checksshButton() {
-                Log.info("Install SSH is already enabled.")
+            if checkDarkButton() {
+                Log.info("Dark Mode is disabled as intended.")
             }
             else {
-                Log.info("Tapping SSH button.")
+                Log.info("Dark Mode is enabled. Tapping button to disable it.")
+                deviceConfig.darkButton.toXCUICoordinate(app: app).tap()
+                sleep(2)
+            }
+            if checksshButton() {
+                Log.info("Install SSH is enabled as intended.")
+            }
+            else {
+                Log.info("Install SSH is disabled. Tapping SSH button to enable it.")
                 deviceConfig.sshButton.toXCUICoordinate(app: app).tap()
                 sleep(2)
             }
-            Log.info("Tapping Done button.")
+            Log.info("Tapping the Done button.")
             deviceConfig.doneButton.toXCUICoordinate(app: app).tap()
             sleep(2)
             
-            Log.info("Jailbreak button found. Tapping it.")
+            Log.info("Tapping Jailbreak button now.")
             deviceConfig.jailbreakButton.toXCUICoordinate(app: app).tap()
             // Sleep until the black ad is displayed. Then close it and tap to OK popup
+            sleep(60)
             var jbDone = false
             count = 0
             while !jbDone {
@@ -224,7 +247,7 @@ class UIC_JailbreakerTests: XCTestCase {
                     sleep(10)
                 }
                 count += 1
-                if count >= 18 {
+                if count >= 12 {
                     jbDone = true
                     lastTestIndex = -2
                 }
@@ -304,6 +327,8 @@ protocol DeviceConfigProtocol {
     var settingsButton: DeviceCoordinate { get }
     /** Center of the white SSH button. */
     var sshButton: DeviceCoordinate { get }
+    /** Center of the white Dark Mode button. */
+    var darkButton: DeviceCoordinate { get }
     /** D of the Done button. */
     var doneButton: DeviceCoordinate { get }
 
@@ -370,6 +395,9 @@ class DeviceRatio1775: DeviceConfigProtocol {
     var sshButton: DeviceCoordinate {
         return DeviceCoordinate(x: 530, y: 950, scaler: scaler)
     }
+    var darkButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 530, y: 425, scaler: scaler)
+    }
     var doneButton: DeviceCoordinate {
         return DeviceCoordinate(x: 512, y: 84, scaler: scaler)
     }
@@ -410,6 +438,9 @@ class DeviceIPhonePlus: DeviceRatio1775 {
     override var sshButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
     }
+    override var darkButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
+    }
     override var doneButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, tapScaler: tapScaler)
     }
@@ -434,6 +465,9 @@ class DeviceRatio1333: DeviceConfigProtocol {
         return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
     }
     var sshButton: DeviceCoordinate {
+        return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
+    }
+    var darkButton: DeviceCoordinate {
         return DeviceCoordinate(x: 0, y: 0, scaler: scaler)
     }
     var doneButton: DeviceCoordinate {
